@@ -1,0 +1,12 @@
+{
+  "development": {
+    "dialect": "sqlite",
+    "storage": "task-distribution.sqlite"
+  },
+  "test": {
+
+  },
+  "production": {
+
+  }
+}
