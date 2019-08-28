@@ -1,0 +1,10 @@
+version: '3'
+services:
+  web:
+    build: .
+    command: >
+      sh -c "./node_modules/.bin/sequelize db:migrate &&
+             ./node_modules/.bin/sequelize db:seed:all &&
+             npm start"
+    ports:
+      - "3000:3000"
