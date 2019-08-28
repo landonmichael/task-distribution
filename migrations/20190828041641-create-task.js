@@ -4,9 +4,8 @@ module.exports = {
     return queryInterface.createTable('Tasks', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       name: {
         type: Sequelize.STRING
@@ -16,6 +15,11 @@ module.exports = {
       },
       assignedOn: {
         type: Sequelize.DATE
+      },
+      agentId: {
+        type: Sequelize.UUID,
+        foreignKey: true,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

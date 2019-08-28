@@ -1,8 +1,8 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const AgentsSkills = sequelize.define('AgentsSkills', {
-    agentId: DataTypes.INTEGER,
-    skillId: DataTypes.INTEGER
+    agentId: DataTypes.UUID,
+    skillId: DataTypes.UUID
   }, {});
   AgentsSkills.associate = function(models) {
     // Agent-Skill many-to-many relationship

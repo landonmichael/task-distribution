@@ -4,12 +4,14 @@ module.exports = {
     return queryInterface.createTable('Agents', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       name: {
         type: Sequelize.STRING
+      },
+      available: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
