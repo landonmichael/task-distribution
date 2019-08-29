@@ -3,27 +3,34 @@
 const db = require('../../models');
 
 // Returns all available Agents.
-const getAvailable = async function() {
-    try {
-        return await db.Agent.findAll({
-            where: {available: true}, include: ['tasks','skills']
+const getAvailable = function() {
+    return new Promise((resolve, reject) => {
+        db.Agent.findAll({
+            where: { available: true }, include: ['tasks','skills']
+        })
+        .then(agents => {
+            resolve(agents);
+        })
+        .catch(err => {
+            console.log(err);
+            reject(err);
         });
-    }
-    catch(err) {
-        console.log(err);
-    }
+    });
 }
 
 // Returns an Agent by Id.
 const getById = function(id) {
-    return db.Agent.findOne({
-        where: {id: id}, include: ['tasks', 'skills']
-    })
-    .then(data => {
-        return data;
-    })
-    .catch(err => {
-        console.log(`Error while finding Agent with Id ${id}:`, err);
+    return new Promise((resolve, reject) => {
+        db.Agent.findOne({
+            where: { id: id }, include: ['tasks','skills']
+        })
+        .then(agent => {
+            resolve(agent);
+        })
+        .catch(err => {
+            console.log(err);
+            reject(err);
+        });
     });
 }
 

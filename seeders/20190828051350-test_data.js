@@ -46,6 +46,20 @@ module.exports = {
             available: true, 
             createdAt: new Date(), 
             updatedAt: new Date() 
+          },
+          { 
+            id: '80850481-ab1a-4802-bf16-b790acdb083d', 
+            name: 'Agent6', 
+            available: true, 
+            createdAt: new Date(), 
+            updatedAt: new Date() 
+          },
+          { 
+            id: '25387861-5a2c-40d0-9933-ba0954e167d3', 
+            name: 'Agent7', 
+            available: true, 
+            createdAt: new Date(), 
+            updatedAt: new Date() 
           }
         ], {});
 
@@ -179,6 +193,23 @@ module.exports = {
             skillId: '81e3fe7f-29a6-48f9-bf68-56abcf74b93f',
             createdAt: new Date(), 
             updatedAt: new Date() 
+          },
+          {
+            agentId: '80850481-ab1a-4802-bf16-b790acdb083d',
+            skillId: 'ab8857f6-60be-4f2b-a7e4-0239b2ecf5dc',
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },
+          {
+            agentId: '80850481-ab1a-4802-bf16-b790acdb083d',
+            skillId: '81e3fe7f-29a6-48f9-bf68-56abcf74b93f',
+            createdAt: new Date(),
+            updatedAt: new Date()
+          },          {
+            agentId: '25387861-5a2c-40d0-9933-ba0954e167d3',
+            skillId: 'ab8857f6-60be-4f2b-a7e4-0239b2ecf5dc',
+            createdAt: new Date(),
+            updatedAt: new Date()
           }
         ], {});
       }
