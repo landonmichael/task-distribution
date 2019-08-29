@@ -5,7 +5,7 @@ const taskService = require('../services/taskService');
 const create = async function(req, res) {
     try {
         const task = await taskService.create(req.body);
-        return res.status(200).send(task);
+        return res.status(200).send(task.toDto());
     }
     catch(err) {
         return res.status(err.status).send(err);

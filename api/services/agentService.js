@@ -2,6 +2,20 @@
 
 const db = require('../../models');
 
+// Returns all Agents.
+const getAll = function() {
+    return new Promise((resolve, reject) => {
+        db.Agent.findAll({include: ['tasks','skills']})
+        .then(agents => {
+            resolve(agents);
+        })
+        .catch(err => {
+            console.log(err);
+            reject(err);
+        });
+    });
+}
+
 // Returns all available Agents.
 const getAvailable = function() {
     return new Promise((resolve, reject) => {
@@ -35,6 +49,7 @@ const getById = function(id) {
 }
 
 module.exports = {
+    getAll: getAll,
     getAvailable: getAvailable,
     getById: getById
 }

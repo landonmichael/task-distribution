@@ -13,5 +13,29 @@ module.exports = (sequelize, DataTypes) => {
     Task.belongsToMany(models.Skill, { through: 'TasksSkills', foreignKey: 'taskId', as: 'skills' });
   };
   Task.beforeCreate(task => task.id = uuid());
+
+  Task.prototype.toDto = function() {
+    const dto = {};
+    if (this.id)
+      dto['id'] = this.id;
+    if (this.name)
+      dto['name'] = this.name;
+    if (this.priority)
+      dto['priority'] = this.priority;
+    if (this.assignedOn)
+      dto['assignedOn'] = this.assignedOn;
+    if (this.agentId) 
+      dto['agentId'] = this.agentId;
+    if (this.skills)
+      dto.skills = [];
+      this.skills.forEach(skill => {
+        dto.skills.push({
+          id: skill.dataValues.id,
+          name: skill.dataValues.name
+        });
+      });
+      return dto;
+  }
+
   return Task;
 };
