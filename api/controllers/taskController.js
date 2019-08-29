@@ -1,14 +1,14 @@
 'use strict'
 
-const agentService = require('../services/agentService');
+const taskService = require('../services/taskService');
 
 const create = async function(req, res) {
     try {
-        const agents = await agentService.getAvailable();
-        return res.status(200).send(agents);
+        const task = await taskService.create(req.body);
+        return res.status(200).send(task);
     }
     catch(err) {
-        console.log(err);
+        return res.status(err.status).send(err);
     }
 }
 

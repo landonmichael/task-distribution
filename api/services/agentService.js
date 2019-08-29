@@ -3,16 +3,15 @@
 const db = require('../../models');
 
 // Returns all available Agents.
-const getAvailable = function() {
-    return db.Agent.findAll({
-        where: {available: true}, include: ['tasks','skills']
-    })
-    .then(data => {
-        return data;
-    })
-    .catch(err => {
-        console.log('Error while finding available Agents:', err);
-    });
+const getAvailable = async function() {
+    try {
+        return await db.Agent.findAll({
+            where: {available: true}, include: ['tasks','skills']
+        });
+    }
+    catch(err) {
+        console.log(err);
+    }
 }
 
 // Returns an Agent by Id.
