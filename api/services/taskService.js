@@ -24,7 +24,7 @@ const getById = function(id) {
 }
 
 // Creates a new Task and assigns to an Agent.
-const create = async function(task) {
+const create = function(task) {
     return new Promise(async (resolve, reject) => {
         try {
             // Ensure the new task is valid.
@@ -56,6 +56,45 @@ const create = async function(task) {
             }
         }
         catch(err) {
+            console.log(err);
+            reject({
+                status: 500,
+                message: 'Server Error',
+                error: 'An unexpected error occured. Please try again at a later time.'
+            });
+        }
+    });
+}
+
+// Update a task to completed status.
+const completeTask = function(id) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const task = await getById(id);
+            if (task) {
+                if (!task.completed) {
+                    db.Task.update({ 
+                        completed: true, 
+                        completedOn: new Date() 
+                    },
+                    { where : { id: task.id }})
+                    .then(() => {
+                        resolve(true);
+                    });
+                } else {
+                    reject({
+                        status: 400,
+                        message: 'Bad Request',
+                        error: `Task with Id ${id} has already been marked as Complete.`
+                    });
+                }
+            } else
+                reject({
+                    status: 404,
+                    message: 'Not Found',
+                    error: `A Task with Id ${id} does not exist.`
+                });
+        } catch(err) {
             console.log(err);
             reject({
                 status: 500,
@@ -112,20 +151,19 @@ const assignToAgent = function(agents, task) {
                 }
             }
             resolve(null);
-        }
-        catch(err) {
+        } catch(err) {
             console.log(err);
             reject({
                 status: 500,
                 message: 'Server Error',
                 error: 'An unexpected error occured. Please try again at a later time.'
-            });
+        });
         }
     });
 }
 
 // Attempt to assign a task to a capable agent without any tasks.
-const assignToTasklessAgent = async function(agents, task) {
+const assignToTasklessAgent = function(agents, task) {
     return new Promise(async (resolve, reject) => {
         try {
             for (let i = 0; i < agents.length; i++) {
@@ -139,8 +177,7 @@ const assignToTasklessAgent = async function(agents, task) {
                 }
             }
             resolve(null);
-        }
-        catch(err) {
+        } catch(err) {
             console.log(err);
             reject({
                 status: 500,
@@ -152,7 +189,7 @@ const assignToTasklessAgent = async function(agents, task) {
 }
 
 // Assigns a new task to an agent.
-const assignNewTask = async function(task) {
+const assignNewTask = function(task) {
     return new Promise(async (resolve, reject) => {
         try {
             task.assignedOn = new Date();
@@ -166,8 +203,7 @@ const assignNewTask = async function(task) {
             });
             const newTask = await getById(savedTask.id);
             resolve(newTask);
-        }   
-        catch(err) {
+        } catch(err) {
             console.log(err);
             reject(err);
         }
@@ -186,7 +222,7 @@ const agentHasAllSkills = function(agent, taskSkills) {
 }
 
 // Validates a Task with basic validation rules.
-const validateTask = async function(task) {
+const validateTask = function(task) {
     return new Promise(async (resolve, reject) => {
         try {
             const errorResponse = {
@@ -231,8 +267,7 @@ const validateTask = async function(task) {
             }
 
             resolve(errorResponse);
-        }
-        catch(err) {
+        } catch(err) {
             console.log(err);
             reject({
                 status: 500,
@@ -245,5 +280,6 @@ const validateTask = async function(task) {
 
 module.exports = {
     getById: getById,
-    create: create
+    create: create,
+    completeTask: completeTask
 }

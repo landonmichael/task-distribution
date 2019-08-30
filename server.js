@@ -9,6 +9,8 @@ const db = require('./models');
 
 // Handle CORS (allow all origins)
 app.use(cors());
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/api/tasks', taskRouter);
