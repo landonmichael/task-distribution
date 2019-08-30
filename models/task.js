@@ -4,7 +4,9 @@ module.exports = (sequelize, DataTypes) => {
   const Task = sequelize.define('Task', {
     name: DataTypes.STRING,
     priority: DataTypes.INTEGER,
-    assignedOn: DataTypes.DATE
+    assignedOn: DataTypes.DATE,
+    completed: DataTypes.BOOLEAN,
+    completedOn: DataTypes.DATE
   }, {});
   Task.associate = function(models) {
     // Task-Agent many-to-one relationship
@@ -26,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       dto['assignedOn'] = this.assignedOn;
     if (this.agentId) 
       dto['agentId'] = this.agentId;
+    if (this.completed)
+      dto['completed'] =  this.completed;
+    if (this.completedOn)
+      dto['completedOn'] =  this.completedOn;
     if (this.skills)
       dto.skills = [];
       this.skills.forEach(skill => {

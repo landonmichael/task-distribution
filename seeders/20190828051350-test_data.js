@@ -15,49 +15,42 @@ module.exports = {
           { 
             id: '60d3577b-4113-4f57-9917-11800c9fed45', 
             name: 'Agent1', 
-            available: false,
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
           { 
             id: '11977a6e-afc6-45a3-a135-fea94c74fd03', 
             name: 'Agent2', 
-            available: true, 
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
           { 
             id: 'e4f08abb-1260-4b19-9658-c3cf177727ee', 
             name: 'Agent3', 
-            available: false, 
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
           { 
             id: '59c2c021-9094-4f6a-8918-d5630393589c', 
             name: 'Agent4', 
-            available: true, 
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
           { 
             id: '40c6ef05-eb1a-4daf-8e52-c5de55e4c540', 
             name: 'Agent5', 
-            available: true, 
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
           { 
             id: '80850481-ab1a-4802-bf16-b790acdb083d', 
             name: 'Agent6', 
-            available: true, 
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
           { 
             id: '25387861-5a2c-40d0-9933-ba0954e167d3', 
             name: 'Agent7', 
-            available: true, 
             createdAt: new Date(), 
             updatedAt: new Date() 
           }
@@ -98,6 +91,7 @@ module.exports = {
             priority: 2, 
             assignedOn: new Date('2019-07-25T10:00:00Z'), 
             agentId: '60d3577b-4113-4f57-9917-11800c9fed45',
+            completed: false,
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
@@ -107,6 +101,7 @@ module.exports = {
             priority: 1, 
             assignedOn: new Date('2019-08-15T13:30:00Z'),
             agentId: '11977a6e-afc6-45a3-a135-fea94c74fd03',
+            completed: false,
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
@@ -116,6 +111,7 @@ module.exports = {
             priority: 2, 
             assignedOn: new Date('2019-08-06T19:00:00Z'),
             agentId: 'e4f08abb-1260-4b19-9658-c3cf177727ee',
+            completed: false,
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
@@ -125,6 +121,7 @@ module.exports = {
             priority: 1, 
             assignedOn: new Date('2019-06-29T05:00:00Z'),
             agentId: '59c2c021-9094-4f6a-8918-d5630393589c',
+            completed: false,
             createdAt: new Date(), 
             updatedAt: new Date() 
           },
@@ -134,6 +131,8 @@ module.exports = {
             priority: 1, 
             assignedOn: new Date('2019-08-24T17:45:00Z'),
             agentId: '40c6ef05-eb1a-4daf-8e52-c5de55e4c540',
+            completed: true,
+            completedOn: new Date(),
             createdAt: new Date(), 
             updatedAt: new Date() 
           }

@@ -10,9 +10,6 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      available: {
-        type: Sequelize.BOOLEAN
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

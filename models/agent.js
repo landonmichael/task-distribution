@@ -2,8 +2,7 @@
 const uuid = require('uuid/v4');
 module.exports = (sequelize, DataTypes) => {
   const Agent = sequelize.define('Agent', {
-    name: DataTypes.STRING,
-    available: DataTypes.INTEGER
+    name: DataTypes.STRING
   }, {});
   Agent.associate = function(models) {
     // Agent-Task one-to-many relationship.
@@ -19,8 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       dto['id'] = this.id;
     if (this.name)
       dto['name'] = this.name;
-    if (this.available)
-      dto['available'] = this.available;
     if (this.tasks) {
       dto.tasks = [];
       this.tasks.forEach(task => {

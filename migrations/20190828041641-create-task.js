@@ -14,12 +14,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       assignedOn: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       agentId: {
         type: Sequelize.UUID,
         foreignKey: true,
         allowNull: false
+      },
+      completed: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
+      completedOn: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,

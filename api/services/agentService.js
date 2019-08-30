@@ -1,11 +1,18 @@
 'use strict'
 
 const db = require('../../models');
+const Op = db.Sequelize.Op;
 
-// Returns all Agents.
-const getAll = function() {
+// Returns all agents with non-completed tasks.
+const getAllWithTasks = function() {
     return new Promise((resolve, reject) => {
-        db.Agent.findAll({include: ['tasks','skills']})
+        db.Agent.findAll({
+            include:[{
+                as: 'tasks',
+                model: db.Task,
+                where: { completed: false },
+            }, 'skills']
+        })
         .then(agents => {
             resolve(agents);
         })
@@ -16,14 +23,30 @@ const getAll = function() {
     });
 }
 
-// Returns all available Agents.
-const getAvailable = function() {
+// Returns all agents who do not have any tasks assigned.
+const getTaskless = function() {
     return new Promise((resolve, reject) => {
         db.Agent.findAll({
-            where: { available: true }, include: ['tasks','skills']
+            attributes: ['id'],
+            include:[{
+                as: 'tasks',
+                model: db.Task,
+                where: { completed: false },
+            }]
         })
         .then(agents => {
-            resolve(agents);
+            const ids =[];
+            agents.forEach(agent => {
+                ids.push(agent.id);
+            });
+            db.Agent.findAll({
+                where: { 
+                    id: { [Op.notIn]: ids } 
+                }, 
+                include: ['skills']
+            }).then(agents => {
+                resolve(agents);
+            })
         })
         .catch(err => {
             console.log(err);
@@ -49,7 +72,7 @@ const getById = function(id) {
 }
 
 module.exports = {
-    getAll: getAll,
-    getAvailable: getAvailable,
+    getAllWithTasks: getAllWithTasks,
+    getTaskless: getTaskless,
     getById: getById
 }

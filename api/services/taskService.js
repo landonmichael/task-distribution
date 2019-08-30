@@ -27,39 +27,30 @@ const getById = function(id) {
 const create = async function(task) {
     return new Promise(async (resolve, reject) => {
         try {
+            // Ensure the new task is valid.
             const result = await validateTask(task);
             if (result.errors.length == 0) {
-                // Get all agents.
-                const agents = await agentService.getAll();
-                if (agents) {
-                    let newTask;
-                    // First check for agents without any tasks assigned.
-                    const tasklessAgents = agents.filter(x => x.tasks.length === 0);
-                    if (tasklessAgents.length > 0) {
-                        newTask = await assignToTaskless(tasklessAgents, task);
-                        if (newTask)
-                            resolve(newTask);
-                    }
-                    // Next check for agents with tasks that are low priority.
-                    const lowerPriorityAgents = agents.filter(x => x.tasks.length > 0 && 
-                        x.tasks.some(y => y.priority === 1));
-                    if (lowerPriorityAgents.length > 0) {
-                        newTask = await assignToLowerPriority(lowerPriorityAgents, task);
-                        if (newTask)
-                            resolve(newTask);
-                    }
-                    reject({
-                        status: 200,
-                        message: 'Agents Unavailable',
-                        error: noAgentsError
-                    });
-                } else {
-                    reject({
-                        status: 200,
-                        message: 'Agents Unavailable',
-                        error: noAgentsError
-                    });
+                let newTask;
+                // First check for agents without any tasks assigned.
+                const tasklessAgents = await agentService.getTaskless();
+                if (tasklessAgents.length > 0) {
+                    newTask = await assignToTasklessAgent(tasklessAgents, task);
+                    if (newTask)
+                        resolve(newTask);
                 }
+                // Next check to see if there are any agents with existing tasks who can handle.
+                const agentsWithTasks = await agentService.getAllWithTasks();
+                if (agentsWithTasks.length > 0) {
+                    newTask = await assignToAgent(agentsWithTasks, task);
+                    if (newTask)
+                        resolve(newTask);
+                }
+                // If no agents were found, throw an error.
+                reject({
+                    status: 200,
+                    message: 'Agents Unavailable',
+                    error: noAgentsError
+                });
             } else {
                 reject(result);
             }
@@ -75,12 +66,50 @@ const create = async function(task) {
     });
 }
 
-// Attempt to assign task to an agent with lower priority tasks (if they have the correct skills).
-const assignToLowerPriority = function(agents, task) {
+// Attempt to assign a task to a capable agent. 
+const assignToAgent = function(agents, task) {
     return new Promise(async (resolve, reject) => {
         try {
-            for (let i = 0; i < agents.length; i++) {
-
+            let agentId;
+            const capableAgents = [];
+            agents.forEach(agent => {
+                if (agentHasAllSkills(agent, task.skills)) 
+                    capableAgents.push(agent);
+            });
+            // If the are agents capable of handling the task.
+            if (capableAgents.length > 0) {
+                for (let i = 0; i < capableAgents.length; i++) {
+                    // If the agent's existing tasks do not equal the new task priority.
+                    if (!capableAgents[i].tasks.some(x => x.priority === task.priority)) {
+                        // Get the agent Id to assign.
+                        agentId = capableAgents[i].id; break;
+                    }
+                }
+                // If an agent was not found, Ensure that the task priority greater than low.
+                if (!agentId && task.priority > 1) {
+                    let prioritySum = 0;
+                    const taskDetail = [];
+                    // Check if all agents are working on a low priority task.
+                    capableAgents.forEach(agent => {
+                        agent.tasks.forEach(task => {
+                            prioritySum += task.priority;
+                            taskDetail.push({agentId: agent.id, assignedOn: task.assignedOn});
+                        });
+                    });
+                    // If all agents have a task with priority 1.
+                    if (prioritySum === capableAgents.length) {
+                        // Get the agent with the most recent assigned task.
+                        const lastAssigned = taskDetail.reduce((prev, current) =>
+                            (prev.assignedOn > current.assignedOn) ? prev : current); 
+                        agentid = lastAssigned.agentId;
+                    }
+                }
+                // Assign the task to the selected agent.
+                if (agentId) {
+                    task.agentId = agentId;
+                    const newTask = await assignNewTask(task);
+                    resolve(newTask);
+                }
             }
             resolve(null);
         }
@@ -95,22 +124,18 @@ const assignToLowerPriority = function(agents, task) {
     });
 }
 
-// Attempt to assign task to an agent without any tasks (if they have the correct skills).
-const assignToTaskless = async function(agents, task) {
+// Attempt to assign a task to a capable agent without any tasks.
+const assignToTasklessAgent = async function(agents, task) {
     return new Promise(async (resolve, reject) => {
         try {
             for (let i = 0; i < agents.length; i++) {
-                // If the agent does not have any tasks assigned.
-                if (agents[i].tasks.length == 0) {
-                    // If the agent has all of the skills.
-                    if (agentHasAllSkills(agents[i], task.skills)) {
-                        task.agentId = agents[i].id;
-                        task.assignedOn = new Date();
-                        // Assign the task to the agent.
-                        const newTask = await assignNewTask(task);
-                        resolve(newTask);
-                        break;
-                    }
+                // If the agent has all of the skills required by the task.
+                if (agentHasAllSkills(agents[i], task.skills)) {
+                    task.agentId = agents[i].id;
+                    // Assign the task to the agent.
+                    const newTask = await assignNewTask(task);
+                    resolve(newTask);
+                    break;
                 }
             }
             resolve(null);
@@ -130,6 +155,8 @@ const assignToTaskless = async function(agents, task) {
 const assignNewTask = async function(task) {
     return new Promise(async (resolve, reject) => {
         try {
+            task.assignedOn = new Date();
+            task.completed = false;
             const savedTask = await db.Task.create(task);
             task.skills.forEach(async skillId => {
                 await db.TasksSkills.create({
