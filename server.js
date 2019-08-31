@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 const taskRouter = require('./api/routes/taskRouter');
+const agentRouter = require('./api/routes/agentRouter');
 const db = require('./models');
 
 // Handle CORS (allow all origins)
@@ -13,7 +14,9 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Add routes
 app.use('/api/tasks', taskRouter);
+app.use('/api/agents', agentRouter);
 
 // DB Sync
 if (process.env.DB_SYNC) {

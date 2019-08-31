@@ -24,15 +24,15 @@ module.exports = (sequelize, DataTypes) => {
         dto.tasks.push({
           id: task.dataValues.id,
           name: task.dataValues.name
-        })
+        });
       }); 
     }
     if (this.skills) {
       dto.skills = [];
       this.skills.forEach(skill => {
-        dto.skills.push({ 
+        dto.skills.push({
           id: skill.dataValues.id,
-          name: skills.dataValues.name
+          name: skill.dataValues.name
         });
       });
     }

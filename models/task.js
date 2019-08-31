@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       dto['completed'] =  this.completed;
     if (this.completedOn)
       dto['completedOn'] =  this.completedOn;
-    if (this.skills)
+    if (this.skills) {
       dto.skills = [];
       this.skills.forEach(skill => {
         dto.skills.push({
@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
           name: skill.dataValues.name
         });
       });
+    }
       return dto;
   }
 
