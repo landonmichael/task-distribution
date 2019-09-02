@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       dto['completedOn'] =  this.completedOn;
     if (this.skills) {
       dto.skills = [];
-      this.skills.forEach(skill => {
+      this.skills.forEach(skill => {sa
         dto.skills.push({
           id: skill.dataValues.id,
           name: skill.dataValues.name
