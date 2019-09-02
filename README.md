@@ -44,3 +44,9 @@ npm start
 ```
 
 Using either method, the Node.js application will run on port 3000 by default.
+
+## API Documentation
+
+The API is documented using Swagger UI. It can be accessed while running the application at the following path:
+
+http://localhost:3000/api-docs
