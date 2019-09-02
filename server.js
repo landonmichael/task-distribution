@@ -8,6 +8,12 @@ const taskRouter = require('./api/routes/taskRouter');
 const agentRouter = require('./api/routes/agentRouter');
 const db = require('./models');
 
+// Swagger
+var swaggerUi = require('swagger-ui-express');
+var swaggerDocument = require('./swagger/swagger.json');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 // Handle CORS (allow all origins)
 app.use(cors());
 

@@ -21,10 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     if (this.tasks) {
       dto.tasks = [];
       this.tasks.forEach(task => {
-        dto.tasks.push({
-          id: task.dataValues.id,
-          name: task.dataValues.name
-        });
+        dto.tasks.push(task.toDto())
       }); 
     }
     if (this.skills) {

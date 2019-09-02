@@ -2,7 +2,6 @@
 
 const agentService = require('../services/agentService');
 
-// Get all agents endpoint /api/agents
 const getAllWithTasks = async function(req, res) {
     try {
         const tasks = await agentService.getAllWithTasks();

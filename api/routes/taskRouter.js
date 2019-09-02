@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.route('')
     .post(taskCtrl.create);
-router.route('/:taskId/complete')
+router.route('/:id/complete')
     .put(taskCtrl.completeTask);
 
 module.exports = router;

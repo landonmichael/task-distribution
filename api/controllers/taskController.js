@@ -16,7 +16,7 @@ const create = async function(req, res) {
 // Complete task endpoint /api/tasks/{id}/complete
 const completeTask = async function(req, res) {
     try {
-        await taskService.completeTask(req.params.taskId);
+        await taskService.completeTask(req.params.id);
         return res.status(204).send();
     }
     catch(err) {
