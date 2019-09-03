@@ -4,10 +4,10 @@ const agentService = require('../services/agentService');
 
 const getAllWithTasks = async function(req, res) {
     try {
-        const tasks = await agentService.getAllWithTasks();
+        const agents = await agentService.getAllWithTasks();
         const result = [];
-        tasks.forEach(task => {
-            result.push(task.toDto());
+        tasks.forEach(agents => {
+            result.push(agent.toDto());
         });
         return res.status(200).send(result);
     } catch(err) {
