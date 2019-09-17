@@ -14,11 +14,11 @@ const getById = function(id) {
             where: { id: id }, include: ['skills']
         })
         .then(task => {
-            resolve(task);
+            return resolve(task);
         })
         .catch(err => {
             console.log(err);
-            reject(err);
+            return reject(err);
         });
     });
 }
@@ -36,28 +36,28 @@ const create = function(task) {
                 if (tasklessAgents.length > 0) {
                     newTask = await assignToTasklessAgent(tasklessAgents, task);
                     if (newTask)
-                        resolve(newTask);
+                        return resolve(newTask);
                 }
                 // Next check to see if there are any agents with existing tasks who can handle.
                 const agentsWithTasks = await agentService.getAllWithTasks();
                 if (agentsWithTasks.length > 0) {
                     newTask = await assignToAgent(agentsWithTasks, task);
                     if (newTask)
-                        resolve(newTask);
+                        return resolve(newTask);
                 }
                 // If no agents were found, throw an error.
-                reject({
+                return reject({
                     status: 200,
                     message: 'Agents Unavailable',
                     error: noAgentsError
                 });
             } else {
-                reject(result);
+                return reject(result);
             }
         }
         catch(err) {
             console.log(err);
-            reject({
+            return reject({
                 status: 500,
                 message: 'Server Error',
                 error: 'An unexpected error occured. Please try again at a later time.'
@@ -79,24 +79,24 @@ const completeTask = function(id) {
                     },
                     { where : { id: task.id }})
                     .then(() => {
-                        resolve(true);
+                        return resolve(true);
                     });
                 } else {
-                    reject({
+                    return reject({
                         status: 400,
                         message: 'Bad Request',
                         error: `Task with Id ${id} has already been marked as Complete.`
                     });
                 }
             } else
-                reject({
+                return reject({
                     status: 404,
                     message: 'Not Found',
                     error: `A Task with Id ${id} does not exist.`
                 });
         } catch(err) {
             console.log(err);
-            reject({
+            return reject({
                 status: 500,
                 message: 'Server Error',
                 error: 'An unexpected error occured. Please try again at a later time.'
@@ -147,13 +147,13 @@ const assignToAgent = function(agents, task) {
                 if (agentId) {
                     task.agentId = agentId;
                     const newTask = await assignNewTask(task);
-                    resolve(newTask);
+                    return resolve(newTask);
                 }
             }
             resolve(null);
         } catch(err) {
             console.log(err);
-            reject({
+            return reject({
                 status: 500,
                 message: 'Server Error',
                 error: 'An unexpected error occured. Please try again at a later time.'
@@ -172,14 +172,13 @@ const assignToTasklessAgent = function(agents, task) {
                     task.agentId = agents[i].id;
                     // Assign the task to the agent.
                     const newTask = await assignNewTask(task);
-                    resolve(newTask);
-                    break;
+                    return resolve(newTask);
                 }
             }
-            resolve(null);
+            return resolve(null);
         } catch(err) {
             console.log(err);
-            reject({
+            return reject({
                 status: 500,
                 message: 'Server Error',
                 error: 'An unexpected error occured. Please try again at a later time.'
@@ -202,10 +201,10 @@ const assignNewTask = function(task) {
                 });
             });
             const newTask = await getById(savedTask.id);
-            resolve(newTask);
+            return resolve(newTask);
         } catch(err) {
             console.log(err);
-            reject(err);
+            return reject(err);
         }
     });
 }
@@ -265,11 +264,10 @@ const validateTask = function(task) {
                         field: 'skills', message: 'Skills is required.' });
                 }       
             }
-
-            resolve(errorResponse);
+            return resolve(errorResponse);
         } catch(err) {
             console.log(err);
-            reject({
+            return reject({
                 status: 500,
                 message: 'Server Error',
                 error: 'An unexpected error occured. Please try again at a later time.'
